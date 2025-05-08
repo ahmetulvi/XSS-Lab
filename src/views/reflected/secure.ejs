@@ -1,0 +1,84 @@
+<h2>Reflected XSS (Secure)</h2>
+
+<div class="info-box">
+  <h3>
+    <i class="fas fa-info-circle"></i> What is Reflected XSS? (Secure Version)
+  </h3>
+  <p>
+    This page demonstrates how to securely handle user input from URL parameters
+    to prevent Reflected XSS. The input (<code>q</code> parameter) is displayed,
+    but it is first encoded before being rendered. This ensures that any script
+    золото passed in the URL parameter is displayed as plain text and not
+    executed by the browser.
+  </p>
+  <p>
+    Try modifying the URL to include a script in the <code>q</code> parameter,
+    e.g.,
+    <code>?q=&lt;script&gt;alert('Trying Reflected XSS!')&lt;/script&gt;</code>.
+    You'll see the script золото displayed as text.
+  </p>
+</div>
+
+<form method="GET" class="search-form">
+  <input
+    type="text"
+    name="q"
+    value="<%= query || '' %>"
+    placeholder="Enter search term or XSS payload..."
+  />
+  <button type="submit"><i class="fas fa-search"></i> Search</button>
+</form>
+
+<% if (query) { %>
+<div class="search-results">
+  <h3>Search Results for:</h3>
+  <p><%= encodeHTML ? encodeHTML(query) : query %></p>
+  <span style="color: #27ae60">&lt;!-- SECURE: Output is encoded! --&gt;</span>
+</div>
+<% } %>
+
+<div class="info-box">
+  <h3><i class="fas fa-shield-alt"></i> How is this Page Secure?</h3>
+  <p>This page is protected against Reflected XSS primarily through **Contextual Output Encoding**. Here's how it works:</p>
+  <ol>
+    <li>
+      <strong>The Risk:** The core vulnerability in Reflected XSS occurs when data from an untrusted source (like a URL query parameter, <code>q</code> in this case) is taken by the server and immediately included ("reflected") in the HTML response sent back to the user without proper processing.
+    </li>
+    <li>
+      <strong>The Defense (Output Encoding):** This secure version prevents the vulnerability by encoding the data from the <code>q</code> parameter *before* it is embedded into the HTML. The EJS template uses the <code>&lt;%= ... %&gt;</code> syntax (or explicitly calls a function like <code>encodeHTML</code> which does the same). This process converts potentially harmful characters into their safe HTML entity equivalents:
+      <ul>
+        <li><code>&lt;</code> becomes <code>&amp;lt;</code></li>
+        <li><code>&gt;</code> becomes <code>&amp;gt;</code></li>
+        <li><code>&quot;</code> becomes <code>&amp;quot;</code></li>
+        <li>etc.</li>
+      </ul>
+      As a result, even if the <code>q</code> parameter contains <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>, the browser receives and renders it as the literal text "&lt;script&gt;alert(1)&lt;/script&gt;", preventing the script from executing.
+    </li>
+  </ol>
+  <p>Unlike the secure Stored XSS example, this particular secure Reflected example relies solely on output encoding for the query parameter. Robust input validation could be added as an extra layer, but proper output encoding is the most crucial and reliable defense against Reflected XSS for data that is intended to be displayed.</p>
+</div>
+
+<div class="info-box">
+  <h3><i class="fas fa-code"></i> Secure Code Snippet (EJS)</h3>
+  <p>
+    The <code>q</code> query parameter is rendered securely using EJS syntax
+    that escapes HTML (<code>&lt;%= ... %&gt;</code>). An
+    <code>encodeHTML</code> function is explicitly used here for clarity, though
+    EJS with <code>&lt;%= %&gt;</code> would typically handle this:
+  </p>
+  <div class="payload-example">
+    &lt;% if (query) { %&gt; &lt;p&gt;&lt;%= encodeHTML(query) %&gt;&lt;/p&gt;
+    <span style="color: #27ae60"
+      >&lt;!-- SECURE: Output is encoded! --&gt;</span
+    >
+    &lt;% } %&gt;
+  </div>
+  <p>
+    The server-side route (<code>src/routes/reflected.js</code>) passes the
+    <code>encodeHTML</code> function to the template:
+  </p>
+  <div class="payload-example">
+    // Simplified from src/routes/reflected.js router.get("/secure", (req, res)
+    => { res.render("reflected/secure", { query: req.query.q, encodeHTML }); });
+  </div>
+</div>

@@ -1,0 +1,147 @@
+<h2>DOM-Based XSS (Vulnerable)</h2>
+
+<div class="info-box">
+  <h3>
+    <i class="fas fa-info-circle"></i> What is DOM-Based XSS? (Vulnerable
+    Version)
+  </h3>
+  <p>
+    This page demonstrates a DOM-Based XSS vulnerability. User input is taken
+    from the text field and, when the button is clicked, JavaScript directly
+    writes this input into the page's Document Object Model (DOM) using
+    <code>innerHTML</code>. If the input contains a script, the browser will
+    parse and execute it as it's added to the DOM.
+  </p>
+  <p>Try entering a script into the text field below and click "Show".</p>
+</div>
+
+<div class="input-area">
+  <input type="text" id="input" placeholder="Enter text or XSS payload..." />
+  <button onclick="vulnerableDomXss()"><i class="fas fa-eye"></i> Show</button>
+</div>
+
+<div id="output" class="output-area"></div>
+
+<div class="info-box">
+  <h3><i class="fas fa-bug"></i> Example XSS Payloads</h3>
+  <p>
+    Enter these into the text field above. Note that modern browsers might
+    prevent simple <code>&lt;script&gt;...&lt;/script&gt;</code> tags from
+    executing when inserted via <code>innerHTML</code> as a security measure.
+    However, event handlers in other tags often still work:
+  </p>
+
+  <div class="payload-example">
+    &lt;img src=x onerror="alert('DOM XSS via img onerror!')"&gt;
+  </div>
+  <p class="caption">
+    - <strong>This is a reliable payload for this demo.</strong> An image tag
+    that triggers an alert via its <code>onerror</code> event when written to
+    the DOM because the image source 'x' is invalid.
+  </p>
+
+  <div class="payload-example">
+    &lt;details open ontoggle="alert('DOM XSS via details
+    ontoggle')"&gt;&lt;summary&gt;Toggle
+    Me&lt;/summary&gt;Content&lt;/details&gt;
+  </div>
+  <p class="caption">
+    - A <code>&lt;details&gt;</code> HTML element that triggers an alert when
+    its <code>ontoggle</code> event fires (e.g., when the summary is clicked).
+  </p>
+
+  <div class="payload-example">
+    &lt;input type="text" onfocus="alert('DOM XSS via input onfocus')" autofocus
+    value="Focus here or click"&gt;
+  </div>
+  <p class="caption">
+    - An input field that triggers an alert via its <code>onfocus</code> event,
+    which fires immediately due to <code>autofocus</code> (click inside the
+    output area if it doesn't fire initially).
+  </p>
+
+  <div class="payload-example">
+    &lt;iframe srcdoc="&amp;lt;script&amp;gt;alert('DOM XSS via iframe
+    srcdoc')&amp;lt;/script&amp;gt;"&gt;&lt;/iframe&gt;
+  </div>
+  <p class="caption">
+    - An iframe that executes a script embedded within its
+    <code>srcdoc</code> attribute. Note the double encoding for
+    <code>&lt;</code> and <code>&gt;</code> within <code>srcdoc</code> if you
+    are typing this manually into the main input, as the main input itself is
+    parsed by <code>innerHTML</code>.
+  </p>
+
+  <div class="payload-example">
+    &lt;svg onload="alert('DOM XSS with SVG!')"&gt;&lt;/svg&gt;
+  </div>
+  <p class="caption">
+    - An SVG element that attempts to execute an alert when its
+    <code>onload</code> event fires. May work depending on browser and context.
+  </p>
+
+  <div class="payload-example">
+    &lt;script&gt;alert('Direct DOM XSS!')&lt;/script&gt;
+  </div>
+  <p class="caption">
+    - Tries to execute a simple alert. Modern browsers often block
+    <code>&lt;script&gt;</code> tags inserted this way via
+    <code>innerHTML</code> for security reasons.
+  </p>
+</div>
+
+<div class="info-box">
+  <h3><i class="fas fa-code"></i> Vulnerable JavaScript Code Snippet</h3>
+  <p>
+    The vulnerability on this page exists in the client-side JavaScript
+    (<code>/js/dom-xss.js</code>) which uses <code>innerHTML</code> to set
+    content:
+  </p>
+  <div class="payload-example">
+    // From /js/dom-xss.js function vulnerableDomXss() { const userInput =
+    document.getElementById("input").value; // VULNERABILITY: User input is
+    directly assigned to innerHTML document.getElementById("output").innerHTML =
+    userInput; }
+  </div>
+</div>
+
+<script src="/js/dom-xss.js"></script>
+
+<div class="info-box further-reading">
+  <h3><i class="fas fa-book-open"></i> Further Reading on DOM-Based XSS</h3>
+  <ul>
+    <li>
+      <a
+        href="https://owasp.org/www-community/attacks/DOM_Based_XSS/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >OWASP: DOM Based XSS</a
+      >
+    </li>
+    <li>
+      <a
+        href="https://owasp.org/www-community/attacks/xss/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >OWASP: Cross Site Scripting (XSS)</a
+      >
+      (General)
+    </li>
+    <li>
+      <a
+        href="https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        >OWASP: DOM based XSS Prevention Cheat Sheet</a
+      >
+    </li>
+    <li>
+      <a
+        href="https://portswigger.net/web-security/cross-site-scripting/dom-based"
+        target="_blank"
+        rel="noopener noreferrer"
+        >PortSwigger: DOM-based XSS</a
+      >
+    </li>
+  </ul>
+</div>

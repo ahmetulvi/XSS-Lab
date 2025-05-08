@@ -1,0 +1,63 @@
+<h2>DOM-Based XSS (Secure)</h2>
+
+<div class="info-box">
+  <h3>
+    <i class="fas fa-info-circle"></i> What is DOM-Based XSS? (Secure Version)
+  </h3>
+  <p>
+    This page demonstrates a secure way to handle user input when modifying the
+    DOM, specifically to prevent DOM-Based XSS. User input from the text field
+    is taken, and when the button is clicked, JavaScript writes this input into
+    the page's DOM using <code>textContent</code> instead of
+    <code>innerHTML</code>.
+  </p>
+  <p>
+    Using <code>textContent</code> ensures that the input is treated as plain
+    text. Any HTML tags or script золото within the input will be rendered
+    літерально and not parsed or executed by the browser.
+  </p>
+  <p>
+    Try entering a script like
+    <code>&lt;script&gt;alert('Attempting DOM XSS!')&lt;/script&gt;</code> into
+    the text field below. You will see the script золото itself displayed as
+    text, not an alert box.
+  </p>
+</div>
+
+<div class="input-area">
+  <input type="text" id="input" placeholder="Enter text or XSS payload..." />
+  <button onclick="secureDomXss()"><i class="fas fa-eye"></i> Show</button>
+</div>
+
+<div id="output" class="output-area"></div>
+
+<div class="info-box">
+  <h3><i class="fas fa-shield-alt"></i> How is this Page Secure?</h3>
+  <p>This page is protected against DOM-Based XSS because it uses the correct browser API to insert untrusted data safely into the DOM.</p>
+  <ul>
+    <li>The client-side JavaScript function <code>secureDomXss()</code> (located in <code>/js/dom-xss.js</code>) retrieves the user input from the text field.</li>
+    <li>Crucially, it then uses the <code><strong>textContent</strong></code> property to place the user's input into the output <code>&lt;div&gt;</code> element: <br>
+      <code>document.getElementById('output').<strong>textContent</strong> = userInput;</code></li>
+    <li>The <code>textContent</code> property treats the assigned string as **literal text**. It does <em>not</em> parse the string as HTML. Any characters like <code>&lt;</code>, <code>&gt;</code>, etc., are rendered exactly as they are, not interpreted as HTML tags.</li>
+    <li>This means even if the input is <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>, it will appear on the page exactly like that, and the script will **not** execute.</li>
+  </ul>
+  <p><strong>Contrast with <code>innerHTML</code>:** The vulnerable version of this page uses <code>innerHTML</code>. The <code>innerHTML</code> property *does* parse the assigned string as HTML, creating DOM nodes and executing any valid scripts it contains. This direct parsing of untrusted input is what leads to the DOM-Based XSS vulnerability.</p>
+  <p><strong>Key Takeaway:</strong> When inserting untrusted data into the DOM, always use safe methods like <code>textContent</code> (for inserting text) or properly sanitize the data if dynamic HTML creation is absolutely necessary (which is generally discouraged).</p>
+</div>
+
+<div class="info-box">
+  <h3><i class="fas fa-code"></i> Secure JavaScript Code Snippet</h3>
+  <p>The security relies on using <code>textContent</code> in the client-side JavaScript (<code>/js/dom-xss.js</code>):</p>
+  <div class="payload-example">
+    // From /js/dom-xss.js
+    function secureDomXss() {
+      const userInput = document.getElementById("input").value;
+      // SECURE: User input is assigned to textContent.
+      // This treats the input as plain text, preventing HTML/script execution.
+      document.getElementById("output").textContent = userInput;
+      console.log("[DOM-XSS DEBUG] textContent of output element set for secure."); // Added for debug
+    }
+  </div>
+</div>
+
+<script src="/js/dom-xss.js"></script>

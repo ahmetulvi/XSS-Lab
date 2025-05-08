@@ -1,0 +1,63 @@
+<h2><i class="fas fa-database"></i> Raw Database Content (Comments)</h2>
+
+<div class="info-box">
+  <p>
+    This page displays the raw content stored in the
+    <code>comments</code> collection in the MongoDB database. This allows you to
+    see exactly what data (including potential XSS payloads) is saved before it
+    gets rendered (escaped or unescaped) on the Stored XSS pages.
+  </p>
+</div>
+
+<div class="db-view-container">
+  <% if (comments && comments.length > 0) { %>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Stored Content (Raw)</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% comments.forEach(function(comment) { %>
+      <tr>
+        <td><code><%= comment._id %></code></td>
+        <td><pre class="raw-content"><%= comment.content %></pre></td>
+        <td><%= comment.createdAt.toLocaleString() %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } else { %>
+  <p>No comments found in the database.</p>
+  <% } %>
+</div>
+
+<!-- Add some basic styles for the table -->
+<style>
+  .db-view-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  .db-view-container th,
+  .db-view-container td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .db-view-container th {
+    background-color: #e9ecef;
+  }
+  .db-view-container .raw-content {
+    background-color: #f8f9fa;
+    padding: 5px;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+</style>

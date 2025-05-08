@@ -1,0 +1,116 @@
+<h2>Stored XSS (Secure)</h2>
+
+<div class="info-box">
+  <h3>
+    <i class="fas fa-info-circle"></i> What is Stored XSS? (Secure Version)
+  </h3>
+  <p>
+    This page demonstrates a secure way to handle user comments to prevent
+    Stored XSS. User-supplied content is displayed, but it is first sanitized or
+    encoded before being rendered in the browser. This ensures that any
+    malicious scripts золото included in the comments are not executed.
+  </p>
+  <p>
+    Try submitting a comment with a script. You will see that the script золото
+    is displayed as plain text instead of being executed.
+  </p>
+</div>
+
+<form method="POST">
+  <textarea
+    name="content"
+    required
+    placeholder="Write a comment or try an XSS payload..."
+  ></textarea>
+  <button type="submit"><i class="fas fa-comment-dots"></i> Add Comment</button>
+</form>
+
+<div class="info-box">
+  <h3><i class="fas fa-shield-alt"></i> How is this Page Secure?</h3>
+  <p>This page implements two key security measures to prevent Stored XSS:</p>
+  <ol>
+    <li>
+      <strong>Contextual Output Encoding (Primary Defense):</strong> The most
+      critical defense mechanism here is encoding the output correctly before
+      it's rendered in the HTML. When comments are displayed, the EJS template
+      uses the <code>&lt;%= ... %&gt;</code> syntax. This syntax automatically
+      escapes potentially dangerous HTML characters:
+      <ul>
+        <li><code>&lt;</code> becomes <code>&amp;lt;</code></li>
+        <li><code>&gt;</code> becomes <code>&amp;gt;</code></li>
+        <li><code>&amp;</code> becomes <code>&amp;amp;</code></li>
+        <li><code>&quot;</code> becomes <code>&amp;quot;</code></li>
+        <li><code>'</code> becomes <code>&amp;#39;</code></li>
+      </ul>
+      This ensures that even if malicious script tags are stored in the
+      database, the browser interprets them as literal text rather than
+      executable code when the page is displayed. While an explicit
+      <code>encodeHTML</code> function is available and used in the template
+      code example for clarity, EJS's default escaping mechanism with
+      <code>&lt;%= %&gt;</code> handles this automatically.
+    </li>
+    <li>
+      <strong>Input Validation (Secondary Defense):</strong> Before saving the
+      comment to the database, the server performs a basic validation check
+      (<code>/^[a-zA-Z0-9 .,!?-]+$/.test(content)</code>). This restricts the
+      allowed characters, acting as an additional layer of defense by rejecting
+      inputs that contain characters often used in XSS payloads (like
+      <code>&lt;</code>, <code>&gt;</code>, <code>'</code>,
+      <code>&quot;</code>). However, input validation alone is rarely sufficient
+      to prevent all forms of XSS, as attackers can often find ways to bypass
+      filters (e.g., using different encodings or contexts). Therefore, output
+      encoding remains the essential defense.
+    </li>
+  </ol>
+  <p>
+    By combining these techniques, especially robust output encoding, the
+    application significantly reduces the risk of Stored XSS.
+  </p>
+</div>
+
+<div class="info-box">
+  <h3><i class="fas fa-code"></i> Secure Code Snippet (EJS & Server-Side)</h3>
+  <p>
+    The comments are rendered securely using EJS syntax that escapes HTML (<code
+      >&lt;%= ... %&gt;</code
+    >), and an <code>encodeHTML</code> function is available (though EJS handles
+    it by default with this syntax):
+  </p>
+  <div class="payload-example">
+    &lt;ul&gt; &lt;% comments && comments.forEach(function(comment) { %&gt;
+    &lt;li&gt;&lt;%= encodeHTML(comment.content) %&gt;&lt;/li&gt;
+    <span style="color: #27ae60"
+      >&lt;!-- SECURE: Output is encoded! --&gt;</span
+    >
+    &lt;% }) %&gt; &lt;/ul&gt;
+  </div>
+  <p>Server-side (Node.js/Express route):</p>
+  <div class="payload-example">
+    // Simplified example from src/routes/stored.js router.post("/secure", async
+    (req, res) => { let content = req.body.content; // Basic input validation if
+    (!/^[a-zA-Z0-9 .,!?-]+$/.test(content)) { return
+    res.status(400).send("Invalid input!"); } // Output encoding is handled by
+    EJS's &lt;%= %&gt; await Comment.create({ content });
+    res.redirect("/stored/secure"); });
+  </div>
+</div>
+
+<h3><i class="fas fa-comments"></i> Comments</h3>
+<!-- Clear Comments Button Form -->
+<form
+  method="POST"
+  action="/stored/clear-comments"
+  style="display: inline-block; margin-bottom: 15px"
+  onsubmit="return confirm('Are you sure you want to delete all comments?');"
+>
+  <button type="submit" class="button-clear">
+    <i class="fas fa-trash-alt"></i> Clear All Comments
+  </button>
+</form>
+<!-- End Clear Comments Button Form -->
+
+<ul>
+  <% comments && comments.forEach(function(comment) { %>
+  <li><%= encodeHTML ? encodeHTML(comment.content) : comment.content %></li>
+  <% }) %>
+</ul>

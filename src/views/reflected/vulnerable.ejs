@@ -1,0 +1,153 @@
+<h2>Reflected XSS (Vulnerable)</h2>
+
+<div class="info-box">
+  <h3>
+    <i class="fas fa-info-circle"></i> What is Reflected XSS? (Vulnerable
+    Version)
+  </h3>
+  <p>
+    This page demonstrates a Reflected XSS vulnerability. User input from the
+    URL (specifically the <code>q</code> parameter in this case) is taken and
+    directly rendered back into the HTML of the page without proper sanitization
+    or encoding. If the input contains a script, the browser will execute it.
+  </p>
+  <p>
+    Try modifying the URL to include a script in the <code>q</code> parameter,
+    or use the form below. For example:
+    <code>?q=&lt;script&gt;alert('Reflected XSS!')&lt;/script&gt;</code>
+  </p>
+</div>
+
+<form method="GET" class="search-form">
+  <input
+    type="text"
+    name="q"
+    value="<%= query || '' %>"
+    placeholder="Enter search term or XSS payload..."
+  />
+  <button type="submit"><i class="fas fa-search"></i> Search</button>
+</form>
+
+<% if (query) { %>
+<div class="search-results">
+  <h3>Search Results for:</h3>
+  <p class="vulnerable-output"><%- query %></p>
+  <span style="color: #e74c3c"
+    >&lt;!-- VULNERABLE: Direct output of 'query' parameter --&gt;</span
+  >
+</div>
+<% } %>
+
+<div class="info-box">
+  <h3><i class="fas fa-bug"></i> Example XSS Payloads (for URL or Form)</h3>
+  <p>
+    Try appending these to the URL (e.g.,
+    <code>.../reflected/vulnerable?q=PAYLOAD_HERE</code>) or entering them into
+    the search form:
+  </p>
+  <div class="payload-example">
+    &lt;script&gt;alert('Reflected XSS via parameter!')&lt;/script&gt;
+  </div>
+  <p class="caption">
+    - A simple JavaScript alert triggered by the 'q' parameter.
+  </p>
+
+  <div class="payload-example">
+    &lt;img src=x onerror="alert('Reflected XSS with image error!')"&gt;
+  </div>
+  <p class="caption">
+    - Triggers an alert when an invalid image source causes an error.
+  </p>
+
+  <div class="payload-example">
+    &lt;b onmouseover="alert('Reflected XSS via mouseover!')"&gt;Hover over
+    me!&lt;/b&gt;
+  </div>
+  <p class="caption">
+    - Executes script when the mouse hovers over the injected bold text element.
+  </p>
+
+  <hr />
+  <h4>Advanced / Different Types of Payloads:</h4>
+
+  <div class="payload-example">
+    %3Cscript%3Ealert('Encoded%20Reflected%20XSS')%3C/script%3E
+  </div>
+  <p class="caption">
+    - Demonstrates URL encoding for script tags. Paste this directly into the
+    URL
+    <code>q</code> parameter, or enter the decoded version
+    <code>&lt;script&gt;alert(...)&lt;/script&gt;</code> in the form.
+  </p>
+
+  <div class="payload-example">
+    &lt;h1&gt;REFLECTED_HEADER&lt;/h1&gt;&lt;p&gt;This text is
+    injected!&lt;/p&gt;
+  </div>
+  <p class="caption">
+    - Shows how reflected input can modify page structure and inject arbitrary
+    HTML content.
+  </p>
+
+  <div class="payload-example">
+    &lt;ScRiPt &gt;alert('Case Bypass Example')&lt;/ScRiPt&gt;
+  </div>
+  <p class="caption">
+    - Uses mixed case in tags, sometimes used to bypass basic case-sensitive XSS
+    filters (conceptual example).
+  </p>
+
+  <div class="payload-example">
+    javascript:alert('Reflected XSS in JS URI!')
+  </div>
+  <p class="caption">
+    - (May not work if directly put in URL, but can be used in
+    <code>href</code> or <code>src</code> attributes if reflected there by the
+    application logic).
+  </p>
+</div>
+
+<div class="info-box">
+  <h3><i class="fas fa-code"></i> Vulnerable Code Snippet (EJS)</h3>
+  <p>
+    The vulnerability on this page is due to the direct and unescaped rendering
+    of the <code>q</code> query parameter from the URL into the page's HTML
+    (using <code>&lt;%- ... %&gt;</code>):
+  </p>
+  <div class="payload-example">
+    &lt;% if (query) { %&gt; &lt;p class="vulnerable-output"&gt;&lt;%- query
+    %&gt;&lt;/p&gt;
+    <span style="color: #e74c3c">&lt;!-- VULNERABILITY HERE! --&gt;</span>
+    &lt;% } %&gt;
+  </div>
+</div>
+
+<div class="info-box further-reading">
+  <h3><i class="fas fa-book-open"></i> Further Reading on Reflected XSS</h3>
+  <ul>
+    <li>
+      <a
+        href="https://owasp.org/www-community/attacks/xss/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >OWASP: Cross Site Scripting (XSS)</a
+      >
+    </li>
+    <li>
+      <a
+        href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        >OWASP: XSS Prevention Cheat Sheet</a
+      >
+    </li>
+    <li>
+      <a
+        href="https://portswigger.net/web-security/cross-site-scripting/reflected"
+        target="_blank"
+        rel="noopener noreferrer"
+        >PortSwigger: Reflected XSS</a
+      >
+    </li>
+  </ul>
+</div>
