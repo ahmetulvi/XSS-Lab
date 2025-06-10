@@ -8,14 +8,14 @@
     This page demonstrates how to securely handle user input from URL parameters
     to prevent Reflected XSS. The input (<code>q</code> parameter) is displayed,
     but it is first encoded before being rendered. This ensures that any script
-    золото passed in the URL parameter is displayed as plain text and not
+    code passed in the URL parameter is displayed as plain text and not
     executed by the browser.
   </p>
   <p>
     Try modifying the URL to include a script in the <code>q</code> parameter,
     e.g.,
     <code>?q=&lt;script&gt;alert('Trying Reflected XSS!')&lt;/script&gt;</code>.
-    You'll see the script золото displayed as text.
+    You'll see the script code displayed as text.
   </p>
 </div>
 

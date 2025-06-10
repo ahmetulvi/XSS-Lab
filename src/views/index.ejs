@@ -16,32 +16,102 @@
   </p>
 </div>
 
-<div class="info-box">
-  <h3>
-    <i class="fas fa-shopping-cart"></i> Yeni: Ürün Tanıtım Sayfası (XSS Açığı)
-  </h3>
-  <p>
-    Gerçek dünya senaryosuna benzer bir e-ticaret ürün sayfası eklendi. Bu sayfa
-    yorum sistemi içerir ve
-    <strong>stored XSS açığına sahiptir</strong>. Yorum formunu kullanarak
-    JavaScript kodu enjekte edebilirsiniz.
-  </p>
-  <div style="text-align: center; margin-top: 15px">
-    <a
-      href="/product"
+<div
+  class="info-box"
+  style="
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  "
+>
+  <div
+    style="
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 70%
+      );
+      pointer-events: none;
+    "
+  ></div>
+  <div style="position: relative; z-index: 2">
+    <h3
       style="
-        background: linear-gradient(45deg, #d4af37, #ffd700);
         color: white;
-        padding: 12px 25px;
-        text-decoration: none;
-        border-radius: 25px;
-        font-weight: bold;
-        display: inline-block;
-        transition: transform 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
       "
     >
-      🔗 Bileklik Ürün Sayfasını Ziyaret Et
-    </a>
+      <i
+        class="fas fa-shopping-cart"
+        style="
+          background: rgba(255, 255, 255, 0.2);
+          padding: 8px;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      ></i>
+      New: Product Showcase Page (XSS Vulnerability)
+    </h3>
+    <p
+      style="
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.7;
+        margin-bottom: 20px;
+      "
+    >
+      We've added a real-world e-commerce product page scenario. This page
+      features a comment system and
+      <strong style="color: #ffe066">contains a stored XSS vulnerability</strong
+      >. You can inject JavaScript code using the comment form to explore this
+      security flaw.
+    </p>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+      "
+    >
+      <a
+        href="/product"
+        style="
+          background: linear-gradient(45deg, #ffe066, #ff6b6b);
+          color: white;
+          padding: 15px 30px;
+          text-decoration: none;
+          border-radius: 30px;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-size: 0.9em;
+        "
+        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'"
+        onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'"
+      >
+        <i class="fas fa-gem"></i>
+        Explore Bracelet Page
+      </a>
+    </div>
   </div>
 </div>
 
