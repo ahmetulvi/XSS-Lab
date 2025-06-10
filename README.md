@@ -45,8 +45,8 @@ For each type, you will find both a vulnerable and a secured (patched) version o
 
     - **If using Git:** Clone the repository:
       ```bash
-      git clone <YOUR_REPOSITORY_URL_HERE> # Replace with your repo URL
-      cd <repository_folder_name> # Replace with your folder name
+      git clone https://github.com/ahmetulvi/XSS-Lab
+      cd XSS-Lab 
       ```
     - **If downloaded as ZIP:** Extract the ZIP file and navigate into the project's root directory using your terminal.
 
