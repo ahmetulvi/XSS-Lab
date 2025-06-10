@@ -14,12 +14,12 @@ function encodeHTML(str) {
   });
 }
 
-// Zafiyetli (vulnerable) sayfa
+// Vulnerable Page
 router.get("/vulnerable", (req, res) => {
   res.render("reflected/vulnerable", { query: req.query.q });
 });
 
-// Güvenli (secure) sayfa
+// Secure Page
 router.get("/secure", (req, res) => {
   res.render("reflected/secure", { query: req.query.q, encodeHTML });
 });

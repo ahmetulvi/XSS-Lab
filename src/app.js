@@ -9,6 +9,7 @@ const storedRoutes = require("./routes/stored");
 const reflectedRoutes = require("./routes/reflected");
 const domRoutes = require("./routes/dom");
 const adminRoutes = require("./routes/admin");
+const productRoutes = require("./routes/product");
 
 const app = express();
 
@@ -36,14 +37,18 @@ app.use(
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connection successful"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// MongoDB connection (optional)
+if (process.env.MONGODB_URI) {
+  mongoose
+    .connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log("MongoDB connection successful"))
+    .catch((err) => console.log("MongoDB connection failed:", err.message));
+} else {
+  console.log("MongoDB connection skipped - no URI provided");
+}
 
 // Routes
 app.get("/", (req, res) => {
@@ -54,6 +59,7 @@ app.use("/stored", storedRoutes);
 app.use("/reflected", reflectedRoutes);
 app.use("/dom", domRoutes);
 app.use("/admin", adminRoutes);
+app.use("/product", productRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-// Zafiyetli (vulnerable) sayfa
+// Vulnerable Page
 router.get("/vulnerable", (req, res) => {
   res.render("dom/vulnerable");
 });
 
-// Güvenli (secure) sayfa
+// Secure Page
 router.get("/secure", (req, res) => {
   res.render("dom/secure");
 });

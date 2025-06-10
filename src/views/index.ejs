@@ -17,6 +17,35 @@
 </div>
 
 <div class="info-box">
+  <h3>
+    <i class="fas fa-shopping-cart"></i> Yeni: Ürün Tanıtım Sayfası (XSS Açığı)
+  </h3>
+  <p>
+    Gerçek dünya senaryosuna benzer bir e-ticaret ürün sayfası eklendi. Bu sayfa
+    yorum sistemi içerir ve
+    <strong>stored XSS açığına sahiptir</strong>. Yorum formunu kullanarak
+    JavaScript kodu enjekte edebilirsiniz.
+  </p>
+  <div style="text-align: center; margin-top: 15px">
+    <a
+      href="/product"
+      style="
+        background: linear-gradient(45deg, #d4af37, #ffd700);
+        color: white;
+        padding: 12px 25px;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: bold;
+        display: inline-block;
+        transition: transform 0.3s;
+      "
+    >
+      🔗 Bileklik Ürün Sayfasını Ziyaret Et
+    </a>
+  </div>
+</div>
+
+<div class="info-box">
   <h3><i class="fas fa-stream"></i> Types of XSS Covered</h3>
   <ul>
     <li>

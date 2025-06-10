@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> - Future Tech</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Override main tag max-width for this page only */
+      main {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+
+        box-shadow: none !important;
+        border-radius: 0 !important;
+      }
+
+      body {
+        font-family: "Roboto", "Arial", sans-serif;
+        background: linear-gradient(135deg, #3a7bd5 0%, #3a6073 100%);
+        color: #000000;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* Navigation styles */
+      .navbar {
+        background-color: #2c3e50;
+        padding: 1rem 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-brand {
+        color: #ecf0f1;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+
+      .nav-item a {
+        color: #ecf0f1;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      .nav-item a:hover,
+      .nav-item a.active {
+        background-color: #e74c3c;
+      }
+
+      /* Container for the product section */
+      .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        flex-grow: 1;
+      }
+
+      .header {
+        text-align: center;
+        margin: 20px auto 40px auto;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        max-width: 1200px;
+      }
+
+      .header h1 {
+        color: #81c784;
+        font-size: 2.8rem;
+        font-weight: 300;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        color: #000000;
+        font-size: 1.1rem;
+      }
+
+      /* New product section layout */
+      .product-section {
+        display: flex;
+        background-color: #ffffff;
+        width: 100%;
+        min-height: 70vh;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        margin-bottom: 50px;
+      }
+
+      .product-image {
+        flex: 1;
+        background-color: #f7f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px;
+        min-height: 70vh;
+      }
+
+      .product-image img {
+        max-width: 90%;
+        max-height: 90%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: contain;
+      }
+
+      .product-info {
+        flex: 1;
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 70vh;
+      }
+
+      .product-info h2 {
+        font-size: 2rem;
+        color: #81c784;
+        margin-bottom: 15px;
+        font-weight: 400;
+      }
+
+      .price {
+        font-size: 2.2rem;
+        color: #81c784;
+        font-weight: bold;
+        margin: 20px 0;
+      }
+
+      .features {
+        list-style: none;
+        margin: 20px 0;
+      }
+
+      .features li {
+        border-bottom: 1px solid #444;
+        border-radius: 10px;
+        color: #000000;
+        font-size: 1.05rem;
+      }
+
+      .features li:before {
+        content: "\f10c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: #81c784;
+        margin-right: 12px;
+        transition: content 0.3s ease;
+      }
+
+      .features li:hover:before {
+        content: "\f111";
+      }
+
+      .comments-section,
+      .comment-form {
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin: 30px auto;
+        max-width: 1200px;
+      }
+
+      .comments-section h3,
+      .comment-form h3 {
+        color: #81c784;
+        margin-bottom: 20px;
+        font-weight: 400;
+        font-size: 1.8rem;
+      }
+
+      .comment {
+        border-bottom: 1px solid #444;
+        padding: 15px 0;
+        color: #ccc;
+      }
+
+      .comment:last-child {
+        border-bottom: none;
+      }
+
+      .comment-author {
+        font-weight: bold;
+        color: #81c784;
+      }
+
+      .comment-date {
+        font-size: 0.9rem;
+        color: #999;
+        margin-left: 10px;
+      }
+
+      .comment-text {
+        margin-top: 8px;
+        color: #000000;
+        line-height: 1.5;
+      }
+
+      .comment-text * {
+        color: #ff8a80;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #000000;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #555;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: rgba(255, 255, 255, 0.05);
+
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #81c784;
+        box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
+      }
+
+      .btn {
+        background: linear-gradient(45deg, #66bb6a, #43a047);
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-transform: uppercase;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 187, 106, 0.3);
+      }
+
+      .back-link {
+        display: flex;
+        margin: 30px auto;
+        color: #81c784;
+        text-decoration: none;
+        padding: 10px 20px;
+        border: 1px solid #81c784;
+        border-radius: 20px;
+        transition: background 0.3s, color 0.3s;
+        text-align: center;
+        max-width: 200px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .back-link:hover {
+        background: #81c784;
+        color: #212121;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+
+        color: #aaa;
+        font-size: 0.9em;
+      }
+
+      @media (max-width: 992px) {
+        .product-section {
+          flex-direction: column;
+        }
+        .product-image {
+          margin-bottom: 0;
+        }
+      }
+
+      /* FontAwesome Link for Icons */
+      @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <div class="header">
+          <h1><%= title %></h1>
+          <p>Harness the power of your movement. Stay charged, sustainably.</p>
+        </div>
+
+        <div class="product-section">
+          <div class="product-image">
+            <img
+              src="/assets/PiezoelectricBracelet.png"
+              alt="Piezoelectric Energy Bracelet"
+            />
+          </div>
+
+          <div class="product-info">
+            <h2>Product Highlights</h2>
+            <div class="price">$199.99</div>
+
+            <p>
+              Introducing the revolutionary Piezoelectric Energy Bracelet – a
+              cutting-edge wearable that converts your kinetic energy from daily
+              movements into electrical power. Never worry about a dead
+              smartwatch or phone again. Sleek, durable, and eco-friendly.
+            </p>
+
+            <ul class="features">
+              <li>Advanced Piezoelectric Generators</li>
+              <li>Kinetic Energy Conversion Technology</li>
+              <li>USB-C Charging Output Port</li>
+              <li>Durable & Water-Resistant Design (IP67)</li>
+              <li>Real-time Energy Generation Display</li>
+              <li>Smart Device Compatibility</li>
+              <li>Eco-Friendly Materials</li>
+            </ul>
+
+            <button class="btn" onclick="alert('Added to cart! (Not really)')">
+              Pre-Order Now
+            </button>
+          </div>
+        </div>
+
+        <div class="comments-section">
+          <h3>User Reviews & Feedback</h3>
+
+          <% if (comments && comments.length > 0) { %> <%
+          comments.forEach(function(comment) { %>
+          <div class="comment">
+            <div>
+              <span class="comment-author"><%= comment.name %></span>
+              <span class="comment-date"><%= comment.date %></span>
+            </div>
+            <div class="comment-text">
+              <%- comment.comment %>
+              <!-- XSS Vulnerability: Unescaped comment -->
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <p>No comments yet. Be the first to review!</p>
+          <% } %>
+        </div>
+
+        <div class="comment-form">
+          <h3>Leave Your Review</h3>
+          <form action="/product/comment" method="POST">
+            <div class="form-group">
+              <label for="name">Your Name:</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="comment">Your Comment:</label>
+              <textarea
+                id="comment"
+                name="comment"
+                rows="4"
+                placeholder="Share your thoughts on the Piezoelectric Bracelet..."
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn">Submit Review</button>
+          </form>
+        </div>
+
+        <a href="/" class="back-link"
+          ><i class="fas fa-arrow-left"></i> Back to Home</a
+        >
+      </div>
+
+      <footer>
+        <p>
+          &copy; 2024 Future Tech Wearables. All rights reserved. | XSS Lab
+          Purpose
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

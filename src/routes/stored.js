@@ -2,14 +2,14 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-// Yorum şeması
+// Comment Schema
 const commentSchema = new mongoose.Schema({
   content: String,
   createdAt: { type: Date, default: Date.now },
 });
 const Comment = mongoose.model("Comment", commentSchema);
 
-// Zafiyetli (vulnerable) sayfa
+// Vulnerable Page
 router.get("/vulnerable", async (req, res) => {
   const comments = await Comment.find().sort({ createdAt: -1 });
   res.render("stored/vulnerable", { comments });
@@ -21,7 +21,7 @@ router.post("/vulnerable", async (req, res) => {
   res.redirect("/stored/vulnerable");
 });
 
-// Güvenli (secure) sayfa
+// Secure Page
 function encodeHTML(str) {
   return str.replace(/[&<>"'/]/g, function (s) {
     return {
@@ -43,7 +43,7 @@ router.get("/secure", async (req, res) => {
 router.post("/secure", async (req, res) => {
   let content = req.body.content;
   if (!/^[a-zA-Z0-9 .,!?-]+$/.test(content)) {
-    return res.status(400).send("Geçersiz giriş!");
+    return res.status(400).send("Invalid entry!");
   }
   await Comment.create({ content });
   res.redirect("/stored/secure");
@@ -54,7 +54,7 @@ router.post("/clear-comments", async (req, res) => {
   try {
     await Comment.deleteMany({}); // Deletes all documents in the Comment collection
     // Redirect back to the page the user was on, or a default
-    // Stored XSS sayfalarına geri yönlendirme yapalım, çünkü butonlar orada olacak.
+
     const referrer = req.header("Referer");
     if (
       referrer &&
@@ -63,12 +63,11 @@ router.post("/clear-comments", async (req, res) => {
     ) {
       res.redirect(referrer.split("?")[0] + "?status=cleared");
     } else {
-      res.redirect("/stored/vulnerable?status=cleared"); // Varsayılan olarak zafiyetli sayfaya git
+      res.redirect("/stored/vulnerable?status=cleared"); // Go to vulnerable page by default
     }
   } catch (err) {
     console.error("Error clearing comments:", err);
-    // Kullanıcıya hata mesajı göstermek yerine, basitçe ana sayfaya yönlendirebiliriz veya bir hata sayfasına.
-    // Şimdilik, geldiği sayfaya geri yönlendirmeyi deneyelim veya varsayılana.
+
     const referrerOnError = req.header("Referer") || "/stored/vulnerable";
     res.redirect(referrerOnError + "?status=clear_error");
   }
