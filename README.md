@@ -6,6 +6,9 @@ Welcome to the XSS Vulnerability Lab! This interactive environment is designed t
 
 This lab provides a hands-on approach to learning by presenting various scenarios where XSS can occur and demonstrating how to mitigate these risks.
 
+
+![ScreenRecording2025-06-12at10 28 24-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/2a5a2e9b-96af-4a84-8680-ca07fc9b7cc6)
+
 ## XSS Types Covered
 
 This lab focuses on the three main types of XSS attacks:
